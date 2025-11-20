@@ -47,10 +47,8 @@ project-name/
 
 | **Caracteristică** | **Tip** | **Unitate** | **Descriere** | **Domeniu valori** |
 |-------------------|---------|-------------|---------------|--------------------|
-| feature_1 | numeric | mm | [...] | 0–150 |
+| feature_1 | img |  | [1500] | 0–150 |
 | feature_2 | categorial | – | [...] | {A, B, C} |
-| feature_3 | numeric | m/s | [...] | 0–2.5 |
-| ... | ... | ... | ... | ... |
 
 **Fișier recomandat:**  `data/README.md`
 
@@ -73,8 +71,5 @@ project-name/
 
 ### 3.3 Probleme identificate
 
-* [exemplu] Feature X are 8% valori lipsă
-* [exemplu] Distribuția feature Y este puternic neuniformă
-* [exemplu] Variabilitate ridicată în clase (class imbalance)
 
 ---
