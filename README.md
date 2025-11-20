@@ -1,4 +1,4 @@
-# ProiectRN
+# Sistem Inteligent pentru Recunoasterea Defectelor Vizuale in Produse
 
 **Disciplina:** Rețele Neuronale  
 **Instituție:** POLITEHNICA București – FIIR  
