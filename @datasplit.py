@@ -3,18 +3,17 @@ import shutil
 import random
 from pathlib import Path
 
-SOURCE_DIR = "data/processed/images" 
-DEST_DIR   = "data/test"              
+SOURCE_DIR = "data/processed/images"
+DEST_DIR_TRAIN = "data/train"
+DEST_DIR_VAL = "data/validation"
+DEST_DIR_TEST = "data/test"
 
-SPLIT = {
-    "train": 0.70,
-    "val":   0.15,
-    "test":  0.15
-}
+TRAIN_SPLIT = 0.70
+VAL_SPLIT = 0.15
+TEST_SPLIT = 0.15
 
-
-for subset in SPLIT.keys():
-    Path(f"{DEST_DIR}/{subset}").mkdir(parents=True, exist_ok=True)
+for d in [DEST_DIR_TRAIN, DEST_DIR_VAL, DEST_DIR_TEST]:
+    Path(d).mkdir(parents=True, exist_ok=True)
 
 for cls in os.listdir(SOURCE_DIR):
     cls_path = f"{SOURCE_DIR}/{cls}"
@@ -24,20 +23,26 @@ for cls in os.listdir(SOURCE_DIR):
     images = os.listdir(cls_path)
     random.shuffle(images)
 
-    train_end = int(len(images) * SPLIT["train"])
-    val_end   = train_end + int(len(images) * SPLIT["val"])
+    train_end = int(len(images) * TRAIN_SPLIT)
+    val_end = train_end + int(len(images) * VAL_SPLIT)
 
-    subsets = {
-        "train": images[:train_end],
-        "val":   images[train_end:val_end],
-        "test":  images[val_end:]
-    }
+    train_files = images[:train_end]
+    val_files = images[train_end:val_end]
+    test_files = images[val_end:]
 
-    for subset, files in subsets.items():
-        dest_folder = f"{DEST_DIR}/{subset}/{cls}"
-        Path(dest_folder).mkdir(parents=True, exist_ok=True)
-        for img in files:
-            shutil.copy(f"{cls_path}/{img}", f"{dest_folder}/{img}")
+    for file in train_files:
+        dest = f"{DEST_DIR_TRAIN}/{cls}"
+        Path(dest).mkdir(parents=True, exist_ok=True)
+        shutil.copy(f"{cls_path}/{file}", f"{dest}/{file}")
 
-print("\nDataset impartit cu succes in 70/15/15!")
-print("Rezultat final in: data/test/\n")
+    for file in val_files:
+        dest = f"{DEST_DIR_VAL}/{cls}"
+        Path(dest).mkdir(parents=True, exist_ok=True)
+        shutil.copy(f"{cls_path}/{file}", f"{dest}/{file}")
+
+    for file in test_files:
+        dest = f"{DEST_DIR_TEST}/{cls}"
+        Path(dest).mkdir(parents=True, exist_ok=True)
+        shutil.copy(f"{cls_path}/{file}", f"{dest}/{file}")
+
+print("Done.")
