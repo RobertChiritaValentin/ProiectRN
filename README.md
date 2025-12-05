@@ -32,14 +32,13 @@ project-name/
 
 ### 2.1 Sursa datelor
 
-* **Origine:** Dataset publoc Kaggle
+* **Origine:** imagini colectate manual de pe internet din surse publice
 * **Modul de achiziție:** Gratis
 * **Perioada / condițiile colectării:** Noiembrie 2025 // Descare de pe website
 
 ### 2.2 Caracteristicile dataset-ului
 
 * **Număr total de observații:** 1500
-* **Număr de caracteristici (features):** 1500
 * **Tipuri de date:** ☐ Imagini
 * **Format fișiere:** ☐ JPG / ☐ XML
 
@@ -47,8 +46,8 @@ project-name/
 
 | **Caracteristică** | **Tip** | **Unitate** | **Descriere** | **Domeniu valori** |
 |-------------------|---------|-------------|---------------|--------------------|
-| feature_1 | img |  | [1500] | 0–150 |
-| feature_2 | categorial | – | [...] | {A, B, C} |
+| imagine | matricial |  | [1500] | imagine RGB convertita la 150x150 greyscale |
+| label | categorial | {defect,nedefect}
 
 **Fișier recomandat:**  `data/README.md`
 
@@ -58,18 +57,68 @@ project-name/
 
 ### 3.1 Statistici descriptive aplicate
 
-* **Medie, mediană, deviație standard**
-* **Min–max și quartile**
-* **Distribuții pe caracteristici** (histograme)
-* **Identificarea outlierilor** (IQR / percentile)
+Dimensiuni variate inițial (480–1920 px)
+Contrast neuniform → rezolvat la preprocesare
+Diferențe mari de iluminare
 
 ### 3.2 Analiza calității datelor
 
-* **Detectarea valorilor lipsă** (% pe coloană)
-* **Detectarea valorilor inconsistente sau eronate**
-* **Identificarea caracteristicilor redundante sau puternic corelate**
+	Nicio imagine coruptă
+	~2% imagini neclare / subexpuse → eliminate
+	Necesitate transformare în grayscale + reducere noise
 
 ### 3.3 Probleme identificate
+
+	⚠ iluminare neuniformă → contrast adjustment
+	⚠ unele imagini prea mari → resize 150×150
+	⚠ variații vizibile de orientare fisuri → augmentare cu rotații
+---
+
+##  4. Preprocesarea Datelor
+
+### 4.1 Curățarea datelor
+
+Eliminare imagini duble
+Eliminare imagini neclare
+Conversie grayscale
+Resize 150×150 px
+
+
+### 4.2 Transformarea caracteristicilor
+
+Normalizare
+Noise reduction
+
+### 4.3 Structurarea seturilor de date
+
+* 70% – train
+* 15% – validation
+* 15% – test
+
+### 4.4 Salvarea rezultatelor preprocesării
+
+	imagini procesate în data/processed/
+	structurate pe clase în train/val/test/
+	parametrii de preprocesare salvați în config/preprocess.yaml
+
+---
+
+##  5. Fișiere Generate în Această Etapă
+
+data/raw/ – imaginile brute
+data/processed/ – grayscale + resize 150x150
+@resize.py – script complet în Python pentru procesare imagini
+@datasplit.py - imparte imaginile procesate automat in test, train, val in proportii 70/15/15
+
+---
+
+##  6. Stare Etapă (de completat de student)
+
+- [x] Structură repository configurată
+- [x] Dataset analizat (EDA realizată)
+- [x] Date preprocesate
+- [x] Seturi train/val/test generate
+- [x] Documentație actualizată în README + `data/README.md`
 
 
 ---
