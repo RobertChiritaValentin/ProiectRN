@@ -47,7 +47,7 @@ project-name/
 | **Caracteristică** | **Tip** | **Unitate** | **Descriere** | **Domeniu valori** |
 |-------------------|---------|-------------|---------------|--------------------|
 | imagine | matricial |  | [1500] | imagine RGB convertita la 150x150 greyscale |
-| label | categorial | {defect,nedefect}
+| label | categorial | | | {defect,nedefect}
 
 **Fișier recomandat:**  `data/README.md`
 
