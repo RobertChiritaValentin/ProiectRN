@@ -85,15 +85,15 @@ Acest proiect propune un sistem automat bazat pe inteligenta artificiala (VisIns
 | **Numar features** | 150x150x3 pixeli (RGB) |
 | **Tipuri de date** | Imagini |
 | **Format fisiere** | JPG/PNG |
-| **Perioada colectarii/generarii** | Ianuarie - Februarie 2026 |
+| **Perioada colectarii/generarii** | Noiembrie / Decembrie 2025 |
 
 ### 3.2 Contributia Originala (minim 40% OBLIGATORIU)
 
 | Camp | Valoare |
 |------|---------|
-| **Total observatii finale (N)** | 1800 |
-| **Observatii originale (M)** | 720 |
-| **Procent contributie originala** | 40% |
+| **Total observatii finale (N)** | 1400 |
+| **Observatii originale (M)** | 100 |
+| **Procent contributie originala** | 0 |
 | **Tip contributie** | Augmentare Avansata & Sinteza Defecte |
 | **Locatie cod generare** | `src/data_acquisition/generate.py` |
 | **Locatie date originale** | `data/generated/` |
@@ -114,9 +114,6 @@ Am utilizat tehnici de augmentare specifice domeniului (rotatii fine, variatii d
 - Redimensionare la 150x150 pixeli.
 - Normalizare pixeli la intervalul [0, 1] (rescale 1./255).
 - Conversie la format RGB consistent.
-
-**Referinte fisiere:** `data/README.md`, `config/preprocessing_params.pkl`
-
 ---
 
 ## 4. Arhitectura SIA si State Machine
@@ -125,9 +122,9 @@ Am utilizat tehnici de augmentare specifice domeniului (rotatii fine, variatii d
 
 | Modul | Tehnologie | Functionalitate Principala | Locatie in Repo |
 |-------|------------|---------------------------|-----------------|
-| **Data Logging / Acquisition** | Python | Generare date si logare decizii | `src/data_acquisition/` |
+| **Data Logging / Acquisition** | Python | Generare date si logare decizii | `src/data_acquisition/generator.py` |
 | **Neural Network** | TensorFlow/Keras | Clasificare defecte (CNN) | `src/neural_network/` |
-| **Web Service / UI** | Streamlit | Interfata operator pentru inspectie | `src/app/` |
+| **Web Service / UI** | Streamlit | Interfata operator pentru inspectie | `src/app/app.py` |
 
 ### 4.2 State Machine
 
@@ -137,24 +134,17 @@ Am utilizat tehnici de augmentare specifice domeniului (rotatii fine, variatii d
 
 | Stare | Descriere | Conditie Intrare | Conditie Iesire |
 |-------|-----------|------------------|-----------------|
-| `IDLE` | Asteptare input operator | Start aplicatie | Imagine incarcata |
-| `PREPROCESS` | Redimensionare si normalizare | Imagine disponibila | Input tensor ready |
-| `INFERENCE` | Predictie cu model CNN | Tensor ready | Probabilitati calculate |
-| `CONFIDENCE_CHECK` | Verificare siguranta decizie | Probabilitati | High/Low Confidence |
-| `DECISION` | Clasificare finala | High Confidence | Defect/OK |
-| `ALERT` | Notificare vizuala | Defect critic detectat | Confirmare operator |
-| `ERROR` | Logare erori | Exceptie | Recovery |
+| `IDLE` | Asteptare operator | Start aplicatie | Fisier incarcat |
+| `LOAD_DATE` | Citire imagine memorie | Upload detectat | Raw Image OK |
+| `PREPROCESS` | Resize 150px & Normalizare | Imagine disponibila | Tensor (1,150,150,3) |
+| `RUN_UI` | Inferenta model CNN | Tensor ready | Probabilitati (Softmax) |
+| `RESULT` | Afisare clasa & scor | Predictie finalizata | Vizualizare UI |
+| `WAIT_FOR_NEXT` | Mentinere rezultat | UI actualizat | Upload nou / Reset |
+| `ERROR` | Gestionare exceptii | Fisier corupt/Eroare | Revenire IDLE |
 
 **Justificare alegere arhitectura State Machine:**
 
 Am ales o arhitectura secventiala cu verificare de incredere (Confidence Check) pentru a preveni alertele false in productie. Starea intermediara de verificare permite separarea cazurilor clare de cele ambigue care necesita interventie umana, esentiala intr-un mediu industrial unde siguranta primeaza.
-
-### 4.3 Actualizari State Machine in Etapa 6
-
-| Componenta Modificata | Valoare Etapa 5 | Valoare Etapa 6 | Justificare Modificare |
-|----------------------|-----------------|-----------------|------------------------|
-| Threshold alerta | 0.5 | 0.75 | Minimizare False Negatives pentru defecte critice |
-| Stare noua adaugata | N/A | `CONFIDENCE_CHECK` | Filtrare predictii incerte (<0.6) |
 
 ---
 
@@ -166,16 +156,11 @@ Am ales o arhitectura secventiala cu verificare de incredere (Confidence Check) 
 Input (150, 150, 3)
   -> Conv2D(32, 3x3, ReLU) -> MaxPool(2x2)
   -> Conv2D(64, 3x3, ReLU) -> MaxPool(2x2)
-  -> Conv2D(128, 3x3, ReLU) -> MaxPool(2x2)
   -> Flatten
-  -> Dense(128, ReLU) -> Dropout(0.5)
+  -> Dense(64, ReLU)
   -> Dense(6, Softmax)
-Output: 6 clase
+Output: 6 clase (Crazing, Inclusion, Patches, Pitted, Rolled, Scratches)
 ```
-
-**Justificare alegere arhitectura:**
-
-Am optat pentru o arhitectura CNN clasica (succesiune Conv-Pool) deoarece este standardul de aur pentru procesarea imaginilor. 3 straturi convolutionale sunt suficiente pentru a extrage trasaturi de nivel jos (linii), mediu (forme) si inalt (pattern-uri complexe de defecte) fara a creste excesiv costul computational. Dropout-ul de 0.5 a fost critic pentru a preveni overfitting-ul pe dataset-ul relativ mic.
 
 ### 5.2 Hiperparametri Finali (Model Optimizat - Etapa 6)
 
@@ -191,13 +176,25 @@ Am optat pentru o arhitectura CNN clasica (succesiune Conv-Pool) deoarece este s
 
 ### 5.3 Experimente de Optimizare
 
-| Exp# | Modificare fata de Baseline | Accuracy | F1-Score | Timp Antrenare | Observatii |
-|------|----------------------------|----------|----------|----------------|------------|
-| **Baseline** | Arhitectura Simpla (2 blocuri Conv) | **0.944** | **0.945** | 15 min | **Cel mai stabil si precis.** |
-| Exp 1 | Arhitectura Complexa (+Dropout, +1 Conv) | 0.879 | 0.878 | 22 min | Instabil (vezi Loss Curve). Confuzii pe Pitted/Inclusion. |
-| Exp 2 | Learning Rate scazut (0.0001) | 0.885 | 0.880 | 30 min | Convergenta prea lenta, fara castig major de performanta. |
-| Exp 3 | Fara Augmentare Date (Doar Raw) | ~0.650 | ~0.620 | 12 min | Overfitting masiv din cauza lipsei de date. |
-| **FINAL** | **Baseline + Augmentare** | **0.944** | **0.945** | 15 min | **Model ales pentru productie.** |
+In procesul de dezvoltare, au fost testate 4 scenarii distincte pentru a valida arhitectura aleasa.
+
+| Exp# | Descriere Experiment | Accuracy | F1-Score | Timp Antrenare | Observatii |
+|:---:|:---|:---:|:---:|:---:|:---|
+| **1** | **Baseline (Arhitectura Simpla + Adam)** | **0.944** | **0.945** | **15 min** | **Cel mai stabil si precis. (Model Final)** |
+| 2 | Arhitectura Complexa (3xConv + Dropout) | 0.879 | 0.878 | 22 min | Instabil (vezi Loss Curve). Confuzii majore intre `Pitted` si `Inclusion`. |
+| 3 | Tuning Hyperparametri (LR=0.0001) | 0.885 | 0.880 | 30 min | Convergenta prea lenta, fara imbunatatiri semnificative fata de Exp 2. |
+| 4 | Fara Data Augmentation (Doar Raw) | 0.652 | 0.620 | 12 min | Overfitting masiv. Demonstreaza necesitatea generarii de date sintetice. |
+
+**Concluzie si Justificare Model Final:**
+
+S-a ales configuratia din **Experimentul 1 (Baseline)** deoarece:
+1.  **Performanta:** A obtinut cea mai mare acuratete (94.4%) cu cel mai mic numar de parametri.
+2.  **Stabilitate:** Graficul de antrenare (*Loss Curve*) a aratat o scadere constanta, spre deosebire de Exp 2 care a oscilat.
+3.  **Eficienta:** Timpul de inferenta este minim, fiind ideal pentru inspectia in timp real pe linie de productie.
+
+**Referinte Fisiere:**
+* Model Final: `models/optimized_model.h5`
+* Loguri Comparatie: `results/optimization_experiments.csv`
 
 **Justificare alegere model final:**
 
@@ -208,12 +205,12 @@ Contrar ipotezei initiale, **Modelul Baseline (Arhitectura Simpla)** salvat in `
 3.  **Eficienta:** Modelul Baseline este mai rapid la inferenta si antrenare, oferind o acuratete de ~94.4%, ceea ce este excelent pentru acest dataset.
 
 **Referinte fisiere:** * CSV Rezultate: `results/optimization_experiments.csv`
-* Model Final: `models/trained_model.h5`
+* Model Final: `models/optimized_model.h5`
 * Grafic Comparativ: `reports/figures/experiments_comparison.png`
 
 **Justificare alegere model final:**
 
-Configuratia finala combina puterea augmentarii datelor (pentru a expune modelul la variatii) cu regularizarea prin Dropout (pentru a preveni memorarea). Aceasta combinatie a dus la o acuratete exceptionala de ~97%, depasind toate celelalte variante testate.
+Configuratia finala combina puterea augmentarii datelor (pentru a expune modelul la variatii) cu regularizarea prin Dropout (pentru a preveni memorarea). Aceasta combinatie a dus la o acuratete exceptionala de ~94%, depasind toate celelalte variante testate.
 
 **Referinte fisiere:** `results/optimization_experiments.csv`, `models/optimized_model.h5`
 
@@ -237,7 +234,7 @@ Configuratia finala combina puterea augmentarii datelor (pentru a expune modelul
 | Accuracy | 87.5% | 94.44% | +6.94% |
 | F1-Score | 0.85 | 0.94 | +0.09 |
 
-**Referinta fisier:** `results/final_metrics.json`
+**Referinta fisier:** `docs/model_comparison.png`
 
 ### 6.2 Confusion Matrix
 
@@ -387,7 +384,7 @@ Python >= 3.8
 
 ### 9.2 Instalare
 ```bash
-git clone [URL]
+git clone https://github.com/RobertChiritaValentin/ProiectRN.git
 cd proiect-rn
 pip install -r requirements.txt
 ```
@@ -398,7 +395,7 @@ pip install -r requirements.txt
 python src/neural_network/train.py
 
 # Lansare Aplicatie
-streamlit run src/app/main.py
+streamlit run src/app/app.py
 ```
 
 ### 9.4 Verificare Rapida
@@ -444,9 +441,11 @@ Daca as reincepe, as colecta mai multe date in conditii de iluminare slaba inca 
 
 ## 11. Bibliografie
 
-1. Song, K., & Yan, Y. (2013). A noise robust method based on completed local binary patterns for hot-rolled steel strip surface defect recognition. Applied Surface Science.
-2. Keras Documentation, 2024. Image Classification from Scratch. https://keras.io/examples/vision/image_classification_from_scratch/
-3. NEU-DET Dataset Documentation. Northeastern University.
+1.  **Abaza, B.**, 2025. AI-Driven Dynamic Covariance for ROS 2 Mobile Robot Localization. *Sensors*, 25, 3026. URL: https://doi.org/10.3390/s25103026
+2.  **Kaustubh, D.**, 2019. *NEU Surface Defect Database* [Dataset]. Kaggle. URL: https://www.kaggle.com/datasets/kaustubhdikshit/neu-surface-defect-database *(Sursa efectivă a datelor utilizate)*
+3.  **TensorFlow Developers**, 2024. TensorFlow Core Documentation. URL: https://www.tensorflow.org/api_docs
+4.  **Van Rossum, G., Drake, F.L.**, 2009. Python 3 Reference Manual. CreateSpace. URL: https://docs.python.org/3/reference/
+5. 
 
 ---
 
