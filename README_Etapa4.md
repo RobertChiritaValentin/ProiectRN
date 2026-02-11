@@ -5,110 +5,103 @@
 **Student:** Chirita Robert-Valentin
 **Grupa:** 631AB
 **Proiect:** VisInspAI - Sistem Inteligent pentru Recunoasterea Defectelor Vizuale
+**Link Repository GitHub:** https://github.com/RobertChiritaValentin/ProiectRN
 **Data:** 12.12.2025
 
 ---
 
 ## Scopul Etapei 4
 
-Această etapă corespunde punctului **5. Dezvoltarea arhitecturii aplicației software bazată pe RN** din lista de 9 etape - slide 2 **RN Specificatii proiect.pdf**.
+Aceasta etapa corespunde punctului **5. Dezvoltarea arhitecturii aplicatiei software bazata pe RN**.
+Livram un **SCHELET COMPLET si FUNCTIONAL** al intregului Sistem cu Inteligenta Artificiala (SIA).
 
-**Trebuie să livrați un SCHELET COMPLET și FUNCȚIONAL al întregului Sistem cu Inteligență Artificială (SIA). In acest stadiu modelul RN este doar definit și compilat (fără antrenare serioasă).**
-
-### IMPORTANT - Ce înseamnă "schelet funcțional":
-
- **CE TREBUIE SĂ FUNCȚIONEZE:**
-- Toate modulele pornesc fără erori
-- Pipeline-ul complet rulează end-to-end (de la date → până la output UI)
-- Modelul RN este definit și compilat (arhitectura există)
-- Web Service/UI primește input și returnează output
-
- **CE NU E NECESAR ÎN ETAPA 4:**
-- Model RN antrenat cu performanță bună
-- Hiperparametri optimizați
-- Acuratețe mare pe test set
-- Web Service/UI cu funcționalități avansate
-
-**Scopul anti-plagiat:** Nu puteți copia un notebook + model pre-antrenat de pe internet, pentru că modelul vostru este NEANTRENAT în această etapă. Demonstrați că înțelegeți arhitectura și că ați construit sistemul de la zero.
+**Status curent:**
+- Module functionale: Data Acquisition, Neural Network, UI.
+- Pipeline: Date generate -> Preprocesare -> Model definit -> Afisare UI.
+- Model RN: Definit, compilat si salvat (neantrenat pentru performanta maxima in aceasta etapa).
 
 ---
 
-## Livrabile Obligatorii
-
-### 1. Tabelul Nevoie Reala → Solutie SIA → Modul Software
+## 1. Tabelul Nevoie Reala -> Solutie SIA -> Modul Software
 
 | **Nevoie reala concreta** | **Cum o rezolva SIA-ul vostru** | **Modul software responsabil** |
 |---------------------------|--------------------------------|--------------------------------|
-| Inspectia manuala este lenta si blocheaza fluxul de productie | Analiza automata a imaginii si clasificare "OK/Defect" in < 1 secunda/piesa | **Neural Network + Web Service** |
-| Erori umane  in detectarea zgarieturilor fine | Decizie bazata pe probabilitati cu consistenta > 90% la detectarea texturilor anormale | **Data Acquisition + Neural Network** |
+| **Viteza redusa a inspectiei umane:** Operatorul uman verifica o piesa in ~5-10 secunde, creand blocaje pe linia de productie. | **Analiza instantanee:** Clasificare automata a imaginii si decizie "OK/Defect" in **< 1 secunda/piesa** cu latenta minima. | **Neural Network + Web Service (Streamlit)** |
+| **Inconsistenta controlului calitatii:** Oboseala operatorilor duce la omiterea zgarieturilor fine ("Scratches") sau a defectelor de textura ("Crazing"). | **Obiectivitate statistica:** Decizie bazata pe probabilitati cu o consistenta estimata de **> 90%** la detectarea texturilor anormale, eliminand subiectivismul. | **Data Acquisition (Augmentare) + Neural Network** |
 
 ---
 
-### 2. Contributia Voastra Originala la Setul de Date – MINIM 40% din Totalul Observatiilor Finale
+## 2. Contributia Originala la Setul de Date – MINIM 40% din Total
 
-### Contributia originala la setul de date:
+Conform cerintelor, am asigurat ca peste 40% din datele utilizate in pipeline-ul final sunt rezultatul unei contributii originale ingineresti.
 
-**Total observatii finale:** 1400
+### Detalii Contributie:
+
+**Total observatii finale:** ~1400 imagini
+**Observatii originale:** ~600 imagini generate (**~43%**)
 
 **Tipul contributiei:**
-[ ] Date generate prin simulare fizica
-[ ] Date achizitionate cu senzori proprii
-[ ] Etichetare/adnotare manuala
-[X] Date sintetice prin metode avansate
+- [ ] Date generate prin simulare fizica
+- [ ] Date achizitionate cu senzori proprii
+- [ ] Etichetare/adnotare manuala
+- [x] **Date sintetice prin metode avansate**
 
-**Descriere detaliata:**
-Deoarece defectele industriale (zgarieturi, crapaturi) sunt greu de obtinut in volum mare in mod normal am dezvoltat un modul de **augmentare sintetica avansata** (`src/data_acquisition/generator.py`).
-Acest modul preia imagini de referinta ("conforme") si genereaza defecte sintetice realiste prin:
-1. Aplicarea unor masti de tip "linie neregulata" pentru a simula zgarieturi.
-2. Introducerea de zgomot Gaussian localizat pentru a simula imperfectiuni de textura.
-3. Modificarea luminozitatii pentru a simula conditii variabile de iluminare in fabrica.
+**Descriere detaliata a metodei:**
+Deoarece defectele industriale specifice (precum *Scratches*, *Crazing* sau *Inclusion*) sunt evenimente rare in productie si greu de capturat in volum mare, am dezvoltat un modul propriu de generare sintetica (`src/data_acquisition/generator.py`).
 
-Aceste date sunt cruciale pentru a invata reteaua sa recunoasca tipare de defecte care apar rar in productia reala, dar sunt critice pentru calitate.
+Nu am folosit simpla augmentare (rotiri/flip-uri), ci o abordare de **sinteza a defectelor**:
+1.  **Simulare Zgarieturi (Scratches):** Am implementat un algoritm care deseneaza curbe Bezier aleatoare si linii neregulate peste suprafete curate ("OK"), variind grosimea si opacitatea pentru a simula adancimea zgarieturii.
+2.  **Simulare Texturi (Crazing/Patches):** Am folosit injectarea de zgomot Gaussian localizat si modificari de contrast pe regiuni specifice pentru a simula defecte de material si fisuri fine.
+3.  **Variatie de Mediu:** Am alterat sintetic luminozitatea (Gamma Correction) pentru a simula conditii variabile de iluminare din fabrica, crescand robustetea modelului.
 
 **Locatia codului:** `src/data_acquisition/generator.py`
 **Locatia datelor:** `data/generated/`
 
 **Dovezi:**
-- Scriptul de generare este functional si produce imagini in folderul specificat.
-- Screenshot cu datele generate: `docs/screenshots/generated_data_sample.png`
+- Scriptul `generator.py` este functional si produce noi mostre la rulare.
+- Capturi de ecran cu datele sintetice vs. reale in `docs/screenshots/`.
 
 ---
 
-### 3. Diagrama State Machine a Intregului Sistem (OBLIGATORIE)
+## 3. Diagrama State Machine a Intregului Sistem
 
 **Locatia diagramei:** `docs/state_machine.png`
 
 ### Justificarea State Machine-ului ales:
 
-Am ales o arhitectura de tip **B. Clasificare imagini defecte productie**, deoarece VisInspAI functioneaza pe baza unui trigger (incarcarea imaginii de catre operator sau senzor).
+Am ales o arhitectura de tip **B. Clasificare imagini defecte productie**, specifica sistemelor de control al calitatii bazate pe *trigger* (senzor de prezenta sau incarcare manuala).
 
 **Starile principale sunt:**
-1. **IDLE:** Sistemul asteapta incarcarea unei imagini a produsului.
-2. **PREPROCESS:** Imaginea este redimensionata la 150x150 si normalizata (valori pixeli 0-1) pentru a intra in retea.
-3. **INFERENCE:** Reteaua Convolutionala (CNN) proceseaza imaginea si returneaza o probabilitate (0.0 - 1.0).
-4. **CHECK_THRESHOLD:** Stare critica de decizie. Daca scorul > 0.5, piesa este marcata "DEFECT".
+1.  **IDLE:** Sistemul este in asteptare, pregatit sa primeasca o imagine (de la operator prin UI sau simulat de la o camera).
+2.  **PREPROCESS:** Imaginea bruta este validata, convertita la `Grayscale` si redimensionata la `150x150 px` (standardizare input RN).
+3.  **INFERENCE:** Reteaua Convolutionala (CNN) proceseaza matricea de pixeli si genereaza un vector de probabilitati.
+4.  **DECISION_LOGIC:** Se aplica un prag (Threshold > 0.5 sau ArgMax pe clase).
+    * Daca scorul de incredere este mic, se cere "RE-CHECK".
+    * Daca scorul este mare, se trece la afisare.
+5.  **DISPLAY/LOG:** Rezultatul (OK/Defect + Tip Defect) este afisat in interfata si logat pentru raportare.
 
-**Tranzitiile critice sunt:**
-- **INFERENCE** → **CHECK_THRESHOLD**: Se realizeaza imediat dupa calculul probabilitatii.
-- **CHECK_THRESHOLD** → **ALERT**: Daca se detecteaza un defect, operatorul este notificat vizual imediat pentru a elimina piesa.
-
-Starea **ERROR** gestioneaza cazurile in care imaginea incarcata este corupta sau are un format neacceptat, prevenind blocarea aplicatiei.
+**Tranzitiile critice:**
+* `UPLOAD` -> `PREPROCESS`: Se activeaza doar daca formatul fisierului este valid (.jpg/.png).
+* `INFERENCE` -> `ERROR`: Daca modelul nu este incarcat corect sau datele de intrare au dimensiuni gresite.
+* `DECISION` -> `ALERT`: Tranzitie critica ce declanseaza alerta vizuala (culoare rosie in UI) pentru oprirea piesei defecte.
 
 ---
 
-### 4. Scheletul Complet al celor 3 Module Cerute
+## 4. Scheletul Complet al celor 3 Module Cerute
 
-Toate cele 3 module pornesc si ruleaza fara erori.
+Toate cele 3 module sunt implementate, integrate si ruleaza fara erori.
 
-| **Modul** | **Tehnologie** | **Status la predare** |
-|-----------|----------------|-----------------------|
-| **1. Data Logging / Acquisition** | Python (OpenCV, NumPy) | **Functional.** Genereaza setul de date sintetice cu defecte simulate (cele 40% originale). |
-| **2. Neural Network Module** | TensorFlow / Keras | **Functional.** Modelul CNN este definit, compilat si salvat in `models/visinspai_model.h5`. [cite_start]Arhitectura este de tip Sequential cu 3 straturi convolutionale. |
-| **3. Web Service / UI** | Streamlit | **Functional.** Interfata permite upload-ul imaginii, afiseaza imaginea si rezultatul clasificarii (OK/Defect). |
+| **Modul** | **Tehnologie / Cale** | **Status la predare** |
+|-----------|-----------------------|-----------------------|
+| **1. Data Acquisition** | Python (`src/data_acquisition/generator.py`) | **FUNCTIONAL.** Scriptul ruleaza si populeaza folderul `data/generated/` cu imagini sintetice ce imita defectele reale, asigurand diversitatea setului de date. |
+| **2. Neural Network** | TensorFlow/Keras (`src/neural_network/`) | **FUNCTIONAL.** Arhitectura CNN este definita in `model.py` (straturi Conv2D + MaxPooling + Dense). Modelul este compilat si salvat in `models/visinspai_model.h5`. Arhitectura accepta input `(150, 150, 1)`. |
+| **3. Web Service / UI** | Streamlit (`src/app/app.py`) | **FUNCTIONAL.** Interfata web porneste, permite incarcarea unei imagini, apeleaza in spate functiile de preprocesare si modelul RN, si afiseaza rezultatul clasificarii in timp real. |
 
-## Structura Repository-ului la Finalul Etapei 4 (OBLIGATORIE)
+---
 
-**Verificare consistență cu Etapa 3:**
+## Structura Repository-ului la Finalul Etapei 4
+
+Structura respecta organizarea standard pentru proiecte de Machine Learning si este consistenta cu livrabilele anterioare.
 
 ```
 ProiectRN/
@@ -129,6 +122,8 @@ ProiectRN/
 │   └── test/                      # Imagini testare live in timpul prezentarii (15%)
 │
 ├── docs/                          # Documentatie aditionala
+│   └── datasets/				   # Documentatie dataset
+│       └── readme.md
 │   └── screenshots/
 │       ├── loss_curve.png         # Grafic de antrenare
 │       ├── confusion_matrix.png   # Matricea de confuzie initiala
@@ -165,8 +160,39 @@ ProiectRN/
         └── @resize.py             # Redimensionare dataset si greyscale
 ```
 
-#### Detalii lansare module:
+---
 
-**Modul 1 (Generare date):**
+## Checklist Final – Etapa 4
+
+### Documentatie si Structura
+- [x] Tabelul Nevoie -> Solutie completat cu metrici concrete.
+- [x] Declaratie contributie 40% date originale (Metoda Sintetica Avansata).
+- [x] Cod generare date (`generator.py`) functional si documentat.
+- [x] Diagrama State Machine (`docs/state_machine.png`) inclusa.
+- [x] Legenda State Machine si justificare completate in README.
+- [x] Structura fisierelor verificata si consistenta.
+
+### Modul 1: Data Acquisition
+- [x] Codul ruleaza fara erori (`python src/data_acquisition/generator.py`).
+- [x] Produce imagini care respecta formatul de intrare al retelei.
+- [x] Imaginile generate sunt salvate corect in `data/generated`.
+
+### Modul 2: Neural Network
+- [x] Arhitectura RN definita clar in `src/neural_network/model.py`.
+- [x] Modelul poate fi instantiat, compilat si salvat (`models/visinspai_model.h5`).
+
+### Modul 3: Web Service / UI
+- [x] Interfata porneste fara erori (`streamlit run src/app/app.py`).
+- [x] Pipeline-ul Input -> Preprocess -> Predict -> Output functioneaza end-to-end.
+- [x] Screenshot demonstrativ existent in `docs/screenshots/`.
+
+---
+
+**Comanda pentru lansarea aplicatiei (Demo):**
+
 ```bash
-python src/data_acquisition/generator.py
+# Windows
+START_WINDOWS.bat
+
+# Sau manual din terminal:
+streamlit run src/app/app.py
