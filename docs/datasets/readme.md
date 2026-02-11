@@ -17,9 +17,11 @@ Toate imaginile brute (Raw) au fost supuse unui pipeline de procesare automata p
 
 ## 3. Statistici si Performanta
 * **Distributie**: Datele sunt impartite in seturi de Train (70%) si Validation (15%), Test (15%).
-* **Acuratete**: Modelul optimizat atinge o precizie de validare de aproximativ 96%.
+* **Acuratete**: Modelul optimizat atinge o precizie de validare de aproximativ 94%.
 * **Analiza Erorilor**: Consultati `confusion_matrix_optimized.png` pentru a vedea performanta modelului pe fiecare clasa in parte.
 
 ## 4. Fisiere Incluse
 * `loss_curve.png`: Evolutia functiei de pierdere pe parcursul celor 15 epoci.
 * `confusion_matrix.png`: Matricea de confuzie rezultata in urma evaluarii pe setul de test.
+* `model_comparison.png`: Compara cele 2 modele si acuratetea lor.
+

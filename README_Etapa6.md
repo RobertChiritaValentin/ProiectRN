@@ -83,8 +83,8 @@ Completati **TOATE** punctele urmatoare:
 3. **Confusion Matrix** generata si analizata
 4. **Analiza detaliata a 5 exemple gresite** cu explicatii cauzale
 5. **Metrici finali pe test set:**
-   - **Acuratete >= 70%** (imbunatatire fata de Etapa 5) -> **REALIZAT: 96.8%**
-   - **F1-score (macro) >= 0.65** -> **REALIZAT: 0.96**
+   - **Acuratete >= 70%** (imbunatatire fata de Etapa 5) -> **REALIZAT: 94.4%**
+   - **F1-score (macro) >= 0.65** -> **REALIZAT: 0.94**
 6. **Salvare model optimizat** in `models/optimized_model.h5`
 7. **Actualizare aplicatie software:**
    - Tabel cu modificarile aduse aplicatiei in Etapa 6
@@ -103,12 +103,12 @@ Documentati **minimum 4 experimente** cu variatii sistematice:
 | Exp 2 | Adaugare Dropout 0.5 | 0.879 | 0.86 | 16 min | Reduce overfitting-ul, loss-ul pe validare e mai stabil. |
 | Exp 3 | Arhitectura complexa (+1 strat Conv) | 0.851 | 0.83 | 22 min | Timp crescut fara beneficii majore in acuratete. |
 | Exp 4 | Batch size 32 -> 64 | 0.865 | 0.84 | 12 min | Antrenare mai rapida, dar stabilitate mai mica a gradientului. |
-| Exp 5 | Augmentari (Zoom, Rotatie usoara) | **0.968** | **0.96** | 25 min | **BEST** - Augmentarea a ajutat enorm la generalizare. |
+| Exp 5 | Augmentari (Zoom, Rotatie usoara) | **0.948** | **0.94** | 25 min | **BEST** - Augmentarea a ajutat enorm la generalizare. |
 
 **Justificare alegere configuratie finala:**
 ```
 Am ales Exp 5 ca model final pentru ca:
-1. Ofera cel mai bun F1-score (0.96), critic pentru aplicatia noastra de inspectie vizuala, minimizand defectele scapate (False Negatives).
+1. Ofera cel mai bun F1-score (0.94), critic pentru aplicatia noastra de inspectie vizuala, minimizand defectele scapate (False Negatives).
 2. Imbunatatirea vine din augmentari relevante domeniului industrial (simularea variatiilor de pozitionare a piesei pe banda).
 3. Timpul de antrenare suplimentar este acceptabil pentru beneficiul obtinut (+9% acuratete fata de baseline).
 4. Testare pe date noi arata generalizare buna (nu overfitting pe augmentari).
@@ -285,8 +285,8 @@ Generati si salvati in `docs/optimization/`:
 - Latenta: 45ms
 
 **Model optimizat (Etapa 6):**
-- Accuracy: 0.968 (+9.3%)
-- F1-score: 0.96 (+11%)
+- Accuracy: 0.948 (+9.3%)
+- F1-score: 0.94 (+11%)
 - Latenta: 35ms (-22%)
 
 **Configuratie finala aleasa:**
@@ -311,8 +311,8 @@ Generati si salvati in `docs/optimization/`:
 
 | **Metrica** | **Etapa 4** | **Etapa 5** | **Etapa 6** | **Target Industrial** | **Status** |
 |-------------|-------------|-------------|-------------|----------------------|------------|
-| Accuracy | ~20% | 87% | 96.8% | >=90% | DEPASIT |
-| F1-score (macro) | ~0.15 | 0.85 | 0.96 | >=0.85 | DEPASIT |
+| Accuracy | ~20% | 87% | 94.4% | >=90% | DEPASIT |
+| F1-score (macro) | ~0.15 | 0.85 | 0.94 | >=0.85 | DEPASIT |
 | Precision (defect) | N/A | 0.82 | 0.95 | >=0.90 | DEPASIT |
 | Recall (defect) | N/A | 0.80 | 0.94 | >=0.90 | DEPASIT |
 | False Negative Rate | N/A | 10% | <3% | <=3% | OK |
@@ -340,7 +340,7 @@ Salvati in `docs/results/`:
 ### Evaluare sintetica a proiectului
 
 **Obiective atinse:**
-- [x] Model RN functional cu accuracy 96.8% pe test set
+- [x] Model RN functional cu accuracy 94.4% pe test set
 - [x] Integrare completa in aplicatie software (3 module)
 - [x] State Machine implementat si actualizat
 - [x] Pipeline end-to-end testat si documentat
@@ -544,8 +544,8 @@ python src/neural_network/train.py --lr 0.001 --batch 32 --dropout 0.5 --epochs 
 python src/neural_network/evaluate.py --model models/optimized_model.h5 --detailed
 
 # Output asteptat:
-# Test Accuracy: 0.9682
-# Test F1-score (macro): 0.9601
+# Test Accuracy: 0.9444
+# Test F1-score (macro): 0.9448
 # ✓ Confusion matrix saved to docs/confusion_matrix_optimized.png
 # ✓ Metrics saved to results/final_metrics.json
 # ✓ Top 5 errors analysis saved to results/error_analysis.json
@@ -559,7 +559,7 @@ streamlit run src/app/main.py
 
 # In consola trebuie sa vedeti:
 # Loading model: models/optimized_model.h5
-# Model loaded successfully. Accuracy on validation: 0.9682
+# Model loaded successfully. Accuracy on validation: 0.9444
 ```
 
 ### 4. Generare vizualizari finale
@@ -628,7 +628,7 @@ python src/neural_network/visualize.py --all
 ### Pre-Predare
 - [x] `etapa6_optimizare_concluzii.md` completat cu TOATE sectiunile
 - [x] Structura repository conforma modelului de mai sus
-- [x] Commit: `"Etapa 6 completa - Accuracy=96.82%, F1=0.96 (optimizat)"`
+- [x] Commit: `"Etapa 6 completa - Accuracy=94.44%, F1=0.94 (optimizat)"`
 - [x] Tag: `git tag -a v0.6-optimized-final -m "Etapa 6 - Model optimizat + Concluzii"`
 - [x] Push: `git push origin main --tags`
 - [x] Repository accesibil (public sau privat cu acces profesori)
@@ -656,8 +656,8 @@ Exemplu:
 ```json
 {
   "model": "optimized_model.h5",
-  "test_accuracy": 0.9682,
-  "test_f1_macro": 0.9601,
+  "test_accuracy": 0.9444,
+  "test_f1_macro": 0.9448,
   "test_precision_macro": 0.9712,
   "test_recall_macro": 0.9588,
   "false_negative_rate": 0.02,
@@ -680,7 +680,7 @@ Exemplu:
 ## Predare si Contact
 
 **Predarea se face prin:**
-1. Commit pe GitHub: `"Etapa 6 completa - Accuracy=96.82%, F1=0.96 (optimizat)"`
+1. Commit pe GitHub: `"Etapa 6 completa - Accuracy=94.44%, F1=0.94 (optimizat)"`
 2. Tag: `git tag -a v0.6-optimized-final -m "Etapa 6 - Model optimizat + Concluzii"`
 3. Push: `git push origin main --tags`
 

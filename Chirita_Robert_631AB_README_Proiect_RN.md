@@ -16,8 +16,8 @@
 
 | Metric | Tinta Minima | Rezultat Etapa 6 | Rezultat Final | Imbunatatire | Status |
 |--------|--------------|------------------|----------------|--------------|--------|
-| Accuracy (Test Set) | >=70% | 96.82% | 96.82% | +9.32% | [✓] |
-| F1-Score (Macro) | >=0.65 | 0.96 | 0.96 | +0.11 | [✓] |
+| Accuracy (Test Set) | >=70% | 94.44% | 94.44% | +6.94% | [✓] |
+| F1-Score (Macro) | >=0.65 | 0.94 | 0.94 | +0.09 | [✓] |
 | Latenta Inferenta | <50ms | 35 ms | 35 ms | -10 ms | [✓] |
 | Contributie Date Originale | >=40% | 40% | 40% | - | [X] |
 | Nr. Experimente Optimizare | >=4 | 5 | 5 | - | [✓] |
@@ -57,7 +57,7 @@ Acest proiect propune un sistem automat bazat pe inteligenta artificiala (VisIns
 
 ### 2.2 Beneficii Masurabile Urmarite
 
-1. Detectarea defectelor cu acuratete >95% (Realizat: 96.8%).
+1. Detectarea defectelor cu acuratete >95% (Realizat: 94.4%).
 2. Reducerea timpului de inspectie la sub 50ms per piesa (Realizat: 35ms).
 3. Clasificarea automata in 6 categorii distincte de defecte pentru analiza cauzelor radacina.
 4. Reducerea riscului de a livra piese defecte catre clienti (False Negatives < 3%).
@@ -197,8 +197,8 @@ Am optat pentru o arhitectura CNN clasica (succesiune Conv-Pool) deoarece este s
 | Exp 1 | LR 0.0001 | 0.671 | 0.65 | 18 min | Prea lent. |
 | Exp 2 | Dropout 0.5 | 0.879 | 0.86 | 16 min | Reduce overfitting. |
 | Exp 3 | Arhitectura complexa | 0.851 | 0.83 | 22 min | Nu merita costul. |
-| Exp 4 | Augmentari | 0.968 | 0.96 | 25 min | Salt major in performanta. |
-| **FINAL** | Augmentari + Dropout 0.5 | **0.968** | **0.96** | 25 min | **Model productie** |
+| Exp 4 | Augmentari | 0.948 | 0.94 | 25 min | Salt major in performanta. |
+| **FINAL** | Augmentari + Dropout 0.5 | **0.948** | **0.94** | 25 min | **Model productie** |
 
 **Justificare alegere model final:**
 
@@ -214,8 +214,8 @@ Configuratia finala combina puterea augmentarii datelor (pentru a expune modelul
 
 | Metric | Valoare | Target Minim | Status |
 |--------|---------|--------------|--------|
-| **Accuracy** | 96.82% | >=70% | [✓] |
-| **F1-Score (Macro)** | 0.96 | >=0.65 | [✓] |
+| **Accuracy** | 94.44% | >=70% | [✓] |
+| **F1-Score (Macro)** | 0.94 | >=0.65 | [✓] |
 | **Precision (Macro)** | 0.97 | - | - |
 | **Recall (Macro)** | 0.95 | - | - |
 
@@ -223,8 +223,8 @@ Configuratia finala combina puterea augmentarii datelor (pentru a expune modelul
 
 | Metric | Etapa 5 (Baseline) | Etapa 6 (Optimizat) | Imbunatatire |
 |--------|-------------------|---------------------|--------------|
-| Accuracy | 87.5% | 96.82% | +9.32% |
-| F1-Score | 0.85 | 0.96 | +0.11 |
+| Accuracy | 87.5% | 94.44% | +6.94% |
+| F1-Score | 0.85 | 0.94 | +0.09 |
 
 **Referinta fisier:** `results/final_metrics.json`
 
@@ -347,7 +347,7 @@ python src/neural_network/evaluate.py --model models/optimized_model.h5 --quick-
 
 | Obiectiv | Target | Realizat | Status |
 |----------|--------|----------|--------|
-| Accuracy | >=70% | 96.8% | [✓] |
+| Accuracy | >=70% | 94.4% | [✓] |
 | Latenta | <50ms | 35ms | [✓] |
 
 ### 10.2 Ce NU Functioneaza - Limitari Cunoscute

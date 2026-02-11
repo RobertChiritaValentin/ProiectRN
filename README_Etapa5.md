@@ -79,8 +79,8 @@ Completați **TOATE** punctele următoare:
 3. **Împărțire stratificată** train/validation/test: 70% / 15% / 15%
 4. **Tabel justificare hiperparametri** (vezi secțiunea de mai jos - OBLIGATORIU)
 5. **Metrici calculate pe test set:**
-   - **Acuratețe: 96.82%** (Target ≥ 65%)
-   - **F1-score (macro): 0.96** (Target ≥ 0.60)
+   - **Acuratețe: 94.44%** (Target ≥ 65%)
+   - **F1-score (macro): 0.94** (Target ≥ 0.60)
 6. **Salvare model antrenat** în `models/trained_model.h5`
 7. **Integrare în UI din Etapa 4:**
    - UI încarcă modelul ANTRENAT
@@ -124,8 +124,8 @@ Includeți **TOATE** cerințele Nivel 1 + următoarele:
 5. **Analiză erori context industrial** (vezi secțiunea dedicată mai jos - OBLIGATORIU Nivel 2)
 
 **Indicatori țintă Nivel 2:**
-- **Acuratețe ≥ 75%** -> **REALIZAT (96.8%)**
-- **F1-score (macro) ≥ 0.70** -> **REALIZAT (0.96)**
+- **Acuratețe ≥ 75%** -> **REALIZAT (94.4%)**
+- **F1-score (macro) ≥ 0.70** -> **REALIZAT (0.94)**
 
 ---
 
@@ -300,7 +300,7 @@ python src/preprocessing/data_splitter.py --stratify --random_state 42
 python src/neural_network/train.py --epochs 15 --batch_size 32 --early_stopping
 
 # Output real obținut:
-# Epoch 15/15 - loss: 0.1027 - accuracy: 0.9682 - val_loss: 0.1528 - val_accuracy: 0.9629
+# Epoch 15/15 - loss: 0.1027 - accuracy: 0.9444 - val_loss: 0.1528 - val_accuracy: 0.9429
 # ✓ Model saved to models/trained_model.h5
 ```
 
@@ -310,7 +310,7 @@ python src/neural_network/train.py --epochs 15 --batch_size 32 --early_stopping
 python src/neural_network/evaluate.py --model models/trained_model.h5
 
 # Output real obținut:
-# Test Accuracy: 0.96
+# Test Accuracy: 0.94
 # Test F1-score (macro): 0.95
 # ✓ Confusion matrix saved to docs/confusion_matrix.png
 ```
@@ -382,7 +382,7 @@ streamlit run src/app/app.py
 ### Pre-Predare
 - [x] `README_Etapa5.md` completat cu TOATE secțiunile
 - [x] Structură repository conformă
-- [x] Commit: `"Etapa 5 completă – Accuracy=96.82%, F1=0.96"`
+- [x] Commit: `"Etapa 5 completă – Accuracy=94.44%, F1=0.94"`
 - [x] Tag: `git tag -a v0.5-model-trained -m "Etapa 5 - Model antrenat"`
 - [x] Push: `git push origin main --tags`
 - [x] Repository accesibil
@@ -415,7 +415,7 @@ Asigurați-vă că următoarele fișiere există și sunt completate:
 ## Predare și Contact
 
 **Predarea se face prin:**
-1. Commit pe GitHub: `"Etapa 5 completă – Accuracy=96.82%, F1=0.96"`
+1. Commit pe GitHub: `"Etapa 5 completă – Accuracy=94.44%, F1=0.94"`
 2. Tag: `git tag -a v0.5-model-trained -m "Etapa 5 - Model antrenat"`
 3. Push: `git push origin main --tags`
 

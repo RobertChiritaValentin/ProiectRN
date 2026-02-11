@@ -136,7 +136,7 @@ ProiectRN/
 │
 ├── reports/                       # Rapoarte si analize vizuale
 │   └── figures/
-│       ├── accuracy_plot.png      # Evolutia acuratetei (atinge ~96%)
+│       ├── accuracy_plot.png      # Evolutia acuratetei (atinge ~94%)
 │       ├── loss_plot.png          # Scaderea erorii pe parcursul celor 15 epoci
 │       └── experiments_comparison.png # Comparatia intre variantele de arhitectura
 │
