@@ -189,16 +189,27 @@ Am optat pentru o arhitectura CNN clasica (succesiune Conv-Pool) deoarece este s
 | Regularizare | Dropout 0.5 | Esentiala pentru generalizare pe date noi. |
 | Early Stopping | patience=5 | Oprire automata cand val_loss nu mai scade. |
 
-### 5.3 Experimente de Optimizare (minim 4 experimente)
+### 5.3 Experimente de Optimizare
 
 | Exp# | Modificare fata de Baseline | Accuracy | F1-Score | Timp Antrenare | Observatii |
 |------|----------------------------|----------|----------|----------------|------------|
-| **Baseline** | Config Etapa 5 (LR=0.001) | 0.875 | 0.85 | 15 min | Referinta. |
-| Exp 1 | LR 0.0001 | 0.671 | 0.65 | 18 min | Prea lent. |
-| Exp 2 | Dropout 0.5 | 0.879 | 0.86 | 16 min | Reduce overfitting. |
-| Exp 3 | Arhitectura complexa | 0.851 | 0.83 | 22 min | Nu merita costul. |
-| Exp 4 | Augmentari | 0.948 | 0.94 | 25 min | Salt major in performanta. |
-| **FINAL** | Augmentari + Dropout 0.5 | **0.948** | **0.94** | 25 min | **Model productie** |
+| **Baseline** | Arhitectura Simpla (2 blocuri Conv) | **0.944** | **0.945** | 15 min | **Cel mai stabil si precis.** |
+| Exp 1 | Arhitectura Complexa (+Dropout, +1 Conv) | 0.879 | 0.878 | 22 min | Instabil (vezi Loss Curve). Confuzii pe Pitted/Inclusion. |
+| Exp 2 | Learning Rate scazut (0.0001) | 0.885 | 0.880 | 30 min | Convergenta prea lenta, fara castig major de performanta. |
+| Exp 3 | Fara Augmentare Date (Doar Raw) | ~0.650 | ~0.620 | 12 min | Overfitting masiv din cauza lipsei de date. |
+| **FINAL** | **Baseline + Augmentare** | **0.944** | **0.945** | 15 min | **Model ales pentru productie.** |
+
+**Justificare alegere model final:**
+
+Contrar ipotezei initiale, **Modelul Baseline (Arhitectura Simpla)** salvat in `models/trained_model.h5` a obtinut performante superioare variantei complexe (Exp 1). Analiza a relevat urmatoarele:
+
+1.  **Generalizare:** Modelul complex, desi a avut Dropout, a manifestat instabilitate in antrenare (oscilatii mari vizibile in `docs/loss_curve.png`) si a tins sa supra-invete zgomotul din imagini.
+2.  **Confuzii Specifice:** Varianta complexa a crescut rata de confuzie intre clasele similare vizual (`pitted_surface` vs `inclusion`), in timp ce modelul simplu a extras trasaturi mai clare.
+3.  **Eficienta:** Modelul Baseline este mai rapid la inferenta si antrenare, oferind o acuratete de ~94.4%, ceea ce este excelent pentru acest dataset.
+
+**Referinte fisiere:** * CSV Rezultate: `results/optimization_experiments.csv`
+* Model Final: `models/trained_model.h5`
+* Grafic Comparativ: `reports/figures/experiments_comparison.png`
 
 **Justificare alegere model final:**
 
@@ -292,16 +303,72 @@ Demonstreaza interfata finala cu incarcarea imaginii, afisarea predictiei, a tim
 ## 8. Structura Repository-ului Final
 
 ```
-proiect-rn-[nume-prenume]/
+ProiectRN/
 │
-├── README.md                               # ACEST FISIER
-├── docs/                                   # Documentatie pe etape
-├── data/                                   # Dataset
-├── src/                                    # Cod sursa (Data, RN, App)
-├── models/                                 # Modele salvate (.h5)
-├── results/                                # Metrici si grafice
-├── config/                                 # Fisiere configurare
-├── requirements.txt                        # Dependente
+├── README.md                               # ACEST FISIER (Documentatie Finala)
+├── Chirita_Robert_631AB_README_Proiect_RN.md # Documentatie specifica
+├── README_Etapa3.md                        # Documentatie Etapa 3
+├── README_Etapa4.md                        # Documentatie Etapa 4
+├── README_Etapa5.md                        # Documentatie Etapa 5
+├── README_Etapa6.md                        # Documentatie Etapa 6
+│
+├── START_VINSINSPAI_win.bat                # Script pornire Windows
+├── START_VISINSPAI_macOS.command           # Script pornire macOS
+│
+├── config/
+│   └── settings.json                       # Configurari proiect
+│
+├── data/
+│   ├── generated/
+│   │   └── defects/                        # Imagini generate cu defecte
+│   ├── processed/
+│   │   └── images/                         # Imagini procesate
+│   ├── raw/
+│   │   ├── images/                         # Imagini brute
+│   │   └── annotations/                    # Annotari XML
+│   ├── test/                               # Set testare
+│   ├── train/                              # Set antrenare
+│   └── validation/                         # Set validare
+│
+├── docs/
+│   ├── confusion_matrix.png                # Matrice confuzie model initial
+│   ├── confusion_matrix_optimized.png      # Matrice confuzie model optimizat
+│   ├── loss_curve.png                      # Grafic antrenare
+│   ├── model_comparison.png                # Comparatie modele (NOU)
+│   ├── state_machine.png                   # Diagrama stari
+│   ├── datasets/                           # Documentatie dataset
+│   ├── demo/                               # Demo video
+│   │   └── demo.mp4                        # Video demonstrativ functionalitate
+│   └── screenshots/                        # Capturi ecran aplicatie
+│
+├── models/
+│   ├── optimized_model.h5                  # Model optimizat (Final)
+│   ├── trained_model.h5                    # Model antrenat (Etapa 5)
+│   └── visinspai_model.h5                  # Model initial (arhitectura)
+│
+├── reports/
+│   └── figures/                            # Grafice si figuri
+│
+├── results/
+│   ├── optimization_experiments.csv        # Rezultate experimente
+│   └── training_history.csv                # Istoric antrenare
+│
+├── src/
+│   ├── app/
+│   │   └── app.py                          # Aplicatia principala Streamlit
+│   ├── data_acquisition/
+│   │   └── generator.py                    # Script generare date
+│   ├── neural_network/
+│   │   ├── evaluate.py                     # Script evaluare
+│   │   ├── model.py                        # Definitie model CNN
+│   │   └── train.py                        # Script antrenare
+│   └── preprocessing/
+│       ├── @datasplit.py                   # Script impartire date
+│       ├── @generateplots.py               # Script generare grafice
+│       ├── @okimage.py                     # Utilitar imagini OK
+│       └── @resize.py                      # Script redimensionare
+│
+├── requirements.txt                        # Dependente proiect
 └── .gitignore
 ```
 

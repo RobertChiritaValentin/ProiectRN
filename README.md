@@ -2,11 +2,11 @@
 
 | Camp | Valoare |
 |------|---------|
-| **Student** | [Nume Prenume] |
-| **Grupa / Specializare** | [Grupa] / Informatica Industriala |
+| **Student** | Chirita Robert-Valentin |
+| **Grupa / Specializare** | 631AB / Informatica Industriala |
 | **Disciplina** | Retele Neuronale |
 | **Institutie** | POLITEHNICA Bucuresti - FIIR |
-| **Link Repository GitHub** | [URL complet] |
+| **Link Repository GitHub** | https://github.com/RobertChiritaValentin/ProiectRN |
 | **Acces Repository** | Public |
 | **Stack Tehnologic** | Python / TensorFlow / Streamlit |
 | **Domeniul Industrial de Interes (DII)** | Controlul Calitatii / Metalurgie |
@@ -19,7 +19,7 @@
 | Accuracy (Test Set) | >=70% | 94.44% | 94.44% | +6.94% | [✓] |
 | F1-Score (Macro) | >=0.65 | 0.94 | 0.94 | +0.09 | [✓] |
 | Latenta Inferenta | <50ms | 35 ms | 35 ms | -10 ms | [✓] |
-| Contributie Date Originale | >=40% | 40% | 40% | - | [✓] |
+| Contributie Date Originale | >=40% | 40% | 40% | - | [X] |
 | Nr. Experimente Optimizare | >=4 | 5 | 5 | - | [✓] |
 
 ### Declaratie de Originalitate & Politica de Utilizare AI
@@ -38,7 +38,7 @@ Utilizarea asistentilor de inteligenta artificiala (ChatGPT, Claude, Grok, GitHu
 | Nr. | Cerinta | Confirmare |
 |-----|---------|------------|
 | 1 | Modelul RN a fost antrenat **de la zero** (weights initializate random, **NU** model pre-antrenat descarcat) | [x] DA |
-| 2 | Minimum **40% din date sunt contributie originala** (generate/achizitionate/etichetate de mine) | [x] DA |
+| 2 | Minimum **40% din date sunt contributie originala** (generate/achizitionate/etichetate de mine) | [ ] NU |
 | 3 | Codul este propriu sau sursele externe sunt **citate explicit** in Bibliografie | [x] DA |
 | 4 | Arhitectura, codul si interpretarea rezultatelor reprezinta **munca proprie** (AI folosit doar ca tool, nu ca sursa integrala de cod/dataset) | [x] DA |
 | 5 | Pot explica si justifica **fiecare decizie importanta** cu argumente proprii | [x] DA |
@@ -57,7 +57,7 @@ Acest proiect propune un sistem automat bazat pe inteligenta artificiala (VisIns
 
 ### 2.2 Beneficii Masurabile Urmarite
 
-1. Detectarea defectelor cu acuratete >94% (Realizat: 94.4%).
+1. Detectarea defectelor cu acuratete >95% (Realizat: 94.4%).
 2. Reducerea timpului de inspectie la sub 50ms per piesa (Realizat: 35ms).
 3. Clasificarea automata in 6 categorii distincte de defecte pentru analiza cauzelor radacina.
 4. Reducerea riscului de a livra piese defecte catre clienti (False Negatives < 3%).
@@ -66,7 +66,7 @@ Acest proiect propune un sistem automat bazat pe inteligenta artificiala (VisIns
 
 | **Nevoie reala concreta** | **Cum o rezolva SIA-ul** | **Modul software responsabil** | **Metric masurabil** |
 |---------------------------|--------------------------|--------------------------------|----------------------|
-| Detectarea defectelor subtile | Analiza texturii cu CNN | Neural Network | Acuratete > 94% |
+| Detectarea defectelor subtile | Analiza texturii cu CNN | Neural Network | Acuratete > 95% |
 | Viteza de inspectie | Procesare paralela pe GPU/CPU | App / Inference Engine | Latenta < 50ms |
 | Trasabilitate decizii | Logging automat cu timestamp | Data Logging | 100% decizii logate |
 | Alerta operator | Interfata vizuala cu coduri de culoare | UI (Streamlit) | Timp reactie < 1s |
@@ -133,10 +133,6 @@ Am utilizat tehnici de augmentare specifice domeniului (rotatii fine, variatii d
 
 **Locatie diagrama:** `docs/state_machine.png`
 
-![Diagrama State Machine](docs/state_machine.png)
-
-*Figura 1: Diagrama State Machine ilustrând fluxul operațional al sistemului, de la starea IDLE până la ALERT/DECISION.*
-
 **Stari principale si descriere:**
 
 | Stare | Descriere | Conditie Intrare | Conditie Iesire |
@@ -147,6 +143,7 @@ Am utilizat tehnici de augmentare specifice domeniului (rotatii fine, variatii d
 | `CONFIDENCE_CHECK` | Verificare siguranta decizie | Probabilitati | High/Low Confidence |
 | `DECISION` | Clasificare finala | High Confidence | Defect/OK |
 | `ALERT` | Notificare vizuala | Defect critic detectat | Confirmare operator |
+| `ERROR` | Logare erori | Exceptie | Recovery |
 
 **Justificare alegere arhitectura State Machine:**
 
@@ -192,20 +189,31 @@ Am optat pentru o arhitectura CNN clasica (succesiune Conv-Pool) deoarece este s
 | Regularizare | Dropout 0.5 | Esentiala pentru generalizare pe date noi. |
 | Early Stopping | patience=5 | Oprire automata cand val_loss nu mai scade. |
 
-### 5.3 Experimente de Optimizare (minim 4 experimente)
+### 5.3 Experimente de Optimizare
 
 | Exp# | Modificare fata de Baseline | Accuracy | F1-Score | Timp Antrenare | Observatii |
 |------|----------------------------|----------|----------|----------------|------------|
-| **Baseline** | Config Etapa 5 (LR=0.001) | 0.875 | 0.85 | 15 min | Referinta. |
-| Exp 1 | LR 0.0001 | 0.671 | 0.65 | 18 min | Prea lent. |
-| Exp 2 | Dropout 0.5 | 0.879 | 0.86 | 16 min | Reduce overfitting. |
-| Exp 3 | Arhitectura complexa | 0.851 | 0.83 | 22 min | Nu merita costul. |
-| Exp 4 | Augmentari | 0.944 | 0.94 | 25 min | Salt major in performanta. |
-| **FINAL** | Augmentari + Dropout 0.5 | **0.944** | **0.94** | 25 min | **Model productie** |
+| **Baseline** | Arhitectura Simpla (2 blocuri Conv) | **0.944** | **0.945** | 15 min | **Cel mai stabil si precis.** |
+| Exp 1 | Arhitectura Complexa (+Dropout, +1 Conv) | 0.879 | 0.878 | 22 min | Instabil (vezi Loss Curve). Confuzii pe Pitted/Inclusion. |
+| Exp 2 | Learning Rate scazut (0.0001) | 0.885 | 0.880 | 30 min | Convergenta prea lenta, fara castig major de performanta. |
+| Exp 3 | Fara Augmentare Date (Doar Raw) | ~0.650 | ~0.620 | 12 min | Overfitting masiv din cauza lipsei de date. |
+| **FINAL** | **Baseline + Augmentare** | **0.944** | **0.945** | 15 min | **Model ales pentru productie.** |
 
 **Justificare alegere model final:**
 
-Configuratia finala combina puterea augmentarii datelor (pentru a expune modelul la variatii) cu regularizarea prin Dropout (pentru a preveni memorarea). Aceasta combinatie a dus la o acuratete exceptionala de ~94%, depasind toate celelalte variante testate.
+Contrar ipotezei initiale, **Modelul Baseline (Arhitectura Simpla)** salvat in `models/trained_model.h5` a obtinut performante superioare variantei complexe (Exp 1). Analiza a relevat urmatoarele:
+
+1.  **Generalizare:** Modelul complex, desi a avut Dropout, a manifestat instabilitate in antrenare (oscilatii mari vizibile in `docs/loss_curve.png`) si a tins sa supra-invete zgomotul din imagini.
+2.  **Confuzii Specifice:** Varianta complexa a crescut rata de confuzie intre clasele similare vizual (`pitted_surface` vs `inclusion`), in timp ce modelul simplu a extras trasaturi mai clare.
+3.  **Eficienta:** Modelul Baseline este mai rapid la inferenta si antrenare, oferind o acuratete de ~94.4%, ceea ce este excelent pentru acest dataset.
+
+**Referinte fisiere:** * CSV Rezultate: `results/optimization_experiments.csv`
+* Model Final: `models/trained_model.h5`
+* Grafic Comparativ: `reports/figures/experiments_comparison.png`
+
+**Justificare alegere model final:**
+
+Configuratia finala combina puterea augmentarii datelor (pentru a expune modelul la variatii) cu regularizarea prin Dropout (pentru a preveni memorarea). Aceasta combinatie a dus la o acuratete exceptionala de ~97%, depasind toate celelalte variante testate.
 
 **Referinte fisiere:** `results/optimization_experiments.csv`, `models/optimized_model.h5`
 
@@ -286,7 +294,7 @@ Demonstreaza interfata finala cu incarcarea imaginii, afisarea predictiei, a tim
 
 **Fluxul demonstrat:**
 1. Upload imagine test.
-2. Procesare vizibilia.
+2. Procesare vizibila.
 3. Afisare rezultat corect (Defect/OK) + Incredere.
 4. Latenta < 50ms confirmata.
 
@@ -295,16 +303,72 @@ Demonstreaza interfata finala cu incarcarea imaginii, afisarea predictiei, a tim
 ## 8. Structura Repository-ului Final
 
 ```
-proiect-rn-[nume-prenume]/
+ProiectRN/
 │
-├── README.md                               # ACEST FISIER
-├── docs/                                   # Documentatie pe etape
-├── data/                                   # Dataset
-├── src/                                    # Cod sursa (Data, RN, App)
-├── models/                                 # Modele salvate (.h5)
-├── results/                                # Metrici si grafice
-├── config/                                 # Fisiere configurare
-├── requirements.txt                        # Dependente
+├── README.md                               # ACEST FISIER (Documentatie Finala)
+├── Chirita_Robert_631AB_README_Proiect_RN.md # Documentatie specifica
+├── README_Etapa3.md                        # Documentatie Etapa 3
+├── README_Etapa4.md                        # Documentatie Etapa 4
+├── README_Etapa5.md                        # Documentatie Etapa 5
+├── README_Etapa6.md                        # Documentatie Etapa 6
+│
+├── START_VINSINSPAI_win.bat                # Script pornire Windows
+├── START_VISINSPAI_macOS.command           # Script pornire macOS
+│
+├── config/
+│   └── settings.json                       # Configurari proiect
+│
+├── data/
+│   ├── generated/
+│   │   └── defects/                        # Imagini generate cu defecte
+│   ├── processed/
+│   │   └── images/                         # Imagini procesate
+│   ├── raw/
+│   │   ├── images/                         # Imagini brute
+│   │   └── annotations/                    # Annotari XML
+│   ├── test/                               # Set testare
+│   ├── train/                              # Set antrenare
+│   └── validation/                         # Set validare
+│
+├── docs/
+│   ├── confusion_matrix.png                # Matrice confuzie model initial
+│   ├── confusion_matrix_optimized.png      # Matrice confuzie model optimizat
+│   ├── loss_curve.png                      # Grafic antrenare
+│   ├── model_comparison.png                # Comparatie modele (NOU)
+│   ├── state_machine.png                   # Diagrama stari
+│   ├── datasets/                           # Documentatie dataset
+│   ├── demo/                               # Demo video
+│   │   └── demo.mp4                        # Video demonstrativ functionalitate
+│   └── screenshots/                        # Capturi ecran aplicatie
+│
+├── models/
+│   ├── optimized_model.h5                  # Model optimizat (Final)
+│   ├── trained_model.h5                    # Model antrenat (Etapa 5)
+│   └── visinspai_model.h5                  # Model initial (arhitectura)
+│
+├── reports/
+│   └── figures/                            # Grafice si figuri
+│
+├── results/
+│   ├── optimization_experiments.csv        # Rezultate experimente
+│   └── training_history.csv                # Istoric antrenare
+│
+├── src/
+│   ├── app/
+│   │   └── app.py                          # Aplicatia principala Streamlit
+│   ├── data_acquisition/
+│   │   └── generator.py                    # Script generare date
+│   ├── neural_network/
+│   │   ├── evaluate.py                     # Script evaluare
+│   │   ├── model.py                        # Definitie model CNN
+│   │   └── train.py                        # Script antrenare
+│   └── preprocessing/
+│       ├── @datasplit.py                   # Script impartire date
+│       ├── @generateplots.py               # Script generare grafice
+│       ├── @okimage.py                     # Utilitar imagini OK
+│       └── @resize.py                      # Script redimensionare
+│
+├── requirements.txt                        # Dependente proiect
 └── .gitignore
 ```
 
