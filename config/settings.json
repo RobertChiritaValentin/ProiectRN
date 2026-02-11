@@ -1,0 +1,21 @@
+{
+    "project_name": "VisInspAI",
+    "version": "1.0.0",
+    "model_config": {
+        "model_path": "models/optimized_model.h5",
+        "input_shape": [150, 150, 1],
+        "classes": ["Crazing", "Inclusion", "Patches", "Pitted", "Rolled", "Scratches"],
+        "target_accuracy": 0.80
+    },
+    "preprocessing": {
+        "resize_dim": [150, 150],
+        "color_mode": "greyscale",
+        "output_format": "png"
+    },
+    "paths": {
+        "raw_data": "data/raw/images",
+        "processed_data": "data/processed/images",
+        "results": "results",
+        "figures": "reports/figures"
+    }
+}

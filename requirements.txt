@@ -1,0 +1,11 @@
+# Interfata
+streamlit
+
+# Procesare date si grafice 
+pandas
+matplotlib
+numpy
+pillow
+
+# Machine Learning
+tensorflow
