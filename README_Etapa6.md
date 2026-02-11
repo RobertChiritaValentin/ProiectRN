@@ -137,7 +137,7 @@ Am ales Exp 5 ca model final pentru ca:
 | **Logging** | Doar predictie | Predictie + confidence + timestamp | Audit trail complet pentru trasabilitate. |
 
 **Completati pentru proiectul vostru:**
-```markdown
+```
 ### Modificari concrete aduse in Etapa 6:
 
 1. **Model inlocuit:** `models/trained_model.h5` -> `models/optimized_model.h5`
@@ -190,7 +190,7 @@ Motivatie: Predictiile cu confidence <0.6 sunt trimise pentru review uman,
 
 **Analiza obligatorie (completati):**
 
-```markdown
+```
 ### Interpretare Confusion Matrix:
 
 **Clasa cu cea mai buna performanta:** Crazing
@@ -252,7 +252,7 @@ Acest tip de eroare este acceptabil operational (piesa este respinsa oricum), da
 
 Descrieti strategia folosita pentru optimizare:
 
-```markdown
+```
 ### Strategie de optimizare adoptata:
 
 **Abordare:** Manual Tuning ghidat de performanta baseline.
@@ -278,7 +278,7 @@ Generati si salvati in `docs/optimization/`:
 
 ### 3.3 Raport Final Optimizare
 
-```markdown
+```
 ### Raport Final Optimizare
 
 **Model baseline (Etapa 5):**
@@ -287,7 +287,7 @@ Generati si salvati in `docs/optimization/`:
 - Latenta: 45ms
 
 **Model optimizat (Etapa 6):**
-- Accuracy: 0.948 (+9.3%)
+- Accuracy: 0.94 (+9.3%)
 - F1-score: 0.94 (+11%)
 - Latenta: 35ms (-22%)
 
@@ -394,7 +394,7 @@ Salvati in `docs/results/`:
 
 ### 5.4 Lectii Invatate
 
-```markdown
+```
 ### Lectii invatate pe parcursul proiectului
 
 **Tehnice:**
@@ -408,11 +408,12 @@ Salvati in `docs/results/`:
 
 **Colaborare:**
 1. Documentarea pas cu pas a ajutat la intelegerea evolutiei proiectului si la scrierea raportului final.
+
 ```
 
 ### 5.5 Plan Post-Feedback (ULTIMA ITERATIE INAINTE DE EXAMEN)
 
-```markdown
+```
 ### Plan de actiune dupa primirea feedback-ului
 
 **ATENTIE:** Etapa 6 este ULTIMA VERSIUNE pentru care se ofera feedback!
@@ -558,11 +559,11 @@ python src/neural_network/evaluate.py --model models/optimized_model.h5 --detail
 
 ```bash
 # Verificare ca UI incarca modelul corect
-streamlit run src/app/main.py
+streamlit run src/app/app.py
 
 # In consola trebuie sa vedeti:
 # Loading model: models/optimized_model.h5
-# Model loaded successfully. Accuracy on validation: 0.9444
+# Model loaded successfully. Accuracy on validation: 0.94
 ```
 
 ### 4. Generare vizualizari finale
@@ -653,30 +654,9 @@ Asigurati-va ca urmatoarele fisiere exista si sunt completate:
 
 3. **`results/optimization_experiments.csv`** - toate experimentele
 
-4. **`results/final_metrics.json`** - metrici finale:
+4. **`docs/confusion_matrix_optimized.png`** - confusion matrix model final
 
-Exemplu:
-```json
-{
-  "model": "optimized_model.h5",
-  "test_accuracy": 0.9444,
-  "test_f1_macro": 0.9448,
-  "test_precision_macro": 0.9712,
-  "test_recall_macro": 0.9588,
-  "false_negative_rate": 0.02,
-  "false_positive_rate": 0.04,
-  "inference_latency_ms": 35,
-  "improvement_vs_baseline": {
-    "accuracy": "+9.3%",
-    "f1_score": "+11.0%",
-    "latency": "-22%"
-  }
-}
-```
-
-5. **`docs/confusion_matrix_optimized.png`** - confusion matrix model final
-
-6. **`docs/screenshots/inference_optimized.png`** - demonstratie UI cu model optimizat
+5. **`docs/screenshots/inference_real.png`** - demonstratie UI cu model optimizat
 
 ---
 
