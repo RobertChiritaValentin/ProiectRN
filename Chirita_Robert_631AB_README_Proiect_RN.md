@@ -19,7 +19,7 @@
 | Accuracy (Test Set) | >=70% | 96.82% | 96.82% | +9.32% | [✓] |
 | F1-Score (Macro) | >=0.65 | 0.96 | 0.96 | +0.11 | [✓] |
 | Latenta Inferenta | <50ms | 35 ms | 35 ms | -10 ms | [✓] |
-| Contributie Date Originale | >=40% | 40% | 40% | - | [✓] |
+| Contributie Date Originale | >=40% | 40% | 40% | - | [] |
 | Nr. Experimente Optimizare | >=4 | 5 | 5 | - | [✓] |
 
 ### Declaratie de Originalitate & Politica de Utilizare AI
@@ -38,7 +38,7 @@ Utilizarea asistentilor de inteligenta artificiala (ChatGPT, Claude, Grok, GitHu
 | Nr. | Cerinta | Confirmare |
 |-----|---------|------------|
 | 1 | Modelul RN a fost antrenat **de la zero** (weights initializate random, **NU** model pre-antrenat descarcat) | [x] DA |
-| 2 | Minimum **40% din date sunt contributie originala** (generate/achizitionate/etichetate de mine) | [x] DA |
+| 2 | Minimum **40% din date sunt contributie originala** (generate/achizitionate/etichetate de mine) | [] NU |
 | 3 | Codul este propriu sau sursele externe sunt **citate explicit** in Bibliografie | [x] DA |
 | 4 | Arhitectura, codul si interpretarea rezultatelor reprezinta **munca proprie** (AI folosit doar ca tool, nu ca sursa integrala de cod/dataset) | [x] DA |
 | 5 | Pot explica si justifica **fiecare decizie importanta** cu argumente proprii | [x] DA |
