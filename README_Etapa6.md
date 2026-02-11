@@ -161,6 +161,8 @@ Am ales Exp 5 ca model final pentru ca:
 
 ### Diagrama State Machine Actualizata (daca s-au facut modificari)
 
+![Diagrama State Machine](docs/state_machine.png)
+
 Daca ati modificat State Machine-ul in Etapa 6, includeti diagrama actualizata in `docs/state_machine_v2.png` si explicati diferentele:
 
 ```
@@ -471,6 +473,7 @@ proiect-rn-[prenume-nume]/
 │   └── screenshots/
 │       ├── ui_demo.png                     # Din Etapa 4
 │       ├── inference_real.png              # Din Etapa 5
+│       ├── state_machine.png               # Diagrama comportament model
 │       └── inference_optimized.png         # NOU - OBLIGATORIU
 │
 ├── data/                                   # Din Etapa 3-5 (NESCHIMBAT)

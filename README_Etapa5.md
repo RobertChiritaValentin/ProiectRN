@@ -142,6 +142,8 @@ Includeți **TOATE** cerințele Nivel 1 + următoarele:
 
 ## Verificare Consistență cu State Machine (Etapa 4)
 
+![Diagrama State Machine](docs/state_machine.png)
+
 Antrenarea și inferența respectă fluxul din State Machine-ul vostru definit în Etapa 4.
 
 **Exemplu pentru detectarea defectelor metalice:**
@@ -229,6 +231,7 @@ proiect-rn-[prenume-nume]/
 │   ├── confusion_matrix.png           # NOU - Matrice Confuzie
 │   └── screenshots/
 │       ├── inference_real.png         # NOU - OBLIGATORIU
+│       ├── state_machine.png          # Diagrama comportament model
 │       └── ui_demo.png                # Din Etapa 4
 │
 ├── data/                              # Din Etapa 3-4

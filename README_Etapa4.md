@@ -67,6 +67,10 @@ Nu am folosit simpla augmentare (rotiri/flip-uri), ci o abordare de **sinteza a 
 
 **Locatia diagramei:** `docs/state_machine.png`
 
+![Diagrama State Machine](docs/state_machine.png)
+
+*Figura 1: Diagrama State Machine definind comportamentul sistemului VisInspAI.*
+
 ### Justificarea State Machine-ului ales:
 
 Am ales o arhitectura de tip **B. Clasificare imagini defecte productie**, specifica sistemelor de control al calitatii bazate pe *trigger* (senzor de prezenta sau incarcare manuala).
@@ -127,6 +131,7 @@ ProiectRN/
 │   └── screenshots/
 │       ├── loss_curve.png         # Grafic de antrenare
 │       ├── confusion_matrix.png   # Matricea de confuzie initiala
+│       ├── state_machine.png      # Diagrama comportament model
 │       └── confusion_matrix_optimized.png # Rezultatul modelului optimizat
 │
 ├── models/                        # Modelele salvate

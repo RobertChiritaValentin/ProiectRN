@@ -133,6 +133,10 @@ Am utilizat tehnici de augmentare specifice domeniului (rotatii fine, variatii d
 
 **Locatie diagrama:** `docs/state_machine.png`
 
+![Diagrama State Machine](docs/state_machine.png)
+
+*Figura 1: Diagrama State Machine ilustrând fluxul operațional al sistemului, de la starea IDLE până la ALERT/DECISION.*
+
 **Stari principale si descriere:**
 
 | Stare | Descriere | Conditie Intrare | Conditie Iesire |
