@@ -8,22 +8,60 @@
 ##  1. Structura Repository-ului Github 
 
 ```
-project-name/
-├── README.md
-├── docs/
-│   └── datasets/          # descriere seturi de date, surse, diagrame
-├── data/
-│   ├── raw/               # date brute
-│   ├── processed/         # date curățate și transformate
-│   ├── train/             # set de instruire
-│   ├── validation/        # set de validare
-│   └── test/              # set de testare
-├── src/
-│   ├── preprocessing/     # funcții pentru preprocesare
-│   ├── data_acquisition/  # generare / achiziție date (dacă există)
-│   └── neural_network/    # implementarea RN (în etapa următoare)
-├── config/                # fișiere de configurare
-└── requirements.txt       # dependențe Python (dacă aplicabil)
+ProiectRN/
+├── README.md                      # Descriere proiect
+├── START_VISINSPAI.command        # Script pornire MacOS 
+├── START_WINDOWS.bat              # Script pornire Windows
+├── requirements.txt               # Lista biblioteci
+│
+├── config/                        # Configurari globale
+│   └── settings.json              # Definire cai
+│
+├── data/                          # Seturi de date
+│   ├── generated/                 # Imagini generate de min
+│   ├── raw/                       # Imagini brute pe categorii (Crazing, Inclusion, etc)
+│   ├── processed/                 # Imagini redimensionate la 150x150 si Greyscale
+│   ├── train/                     # Setul de date pentru antrenarea retelei (70%)
+│   ├── validation/                # Setul de date pentru validarea performantei (15%)
+│   └── test/                      # Imagini testare live in timpul prezentarii (15%)
+│
+├── docs/                          # Documentatie aditionala
+│   └── datasets/				   # Documentatie dataset
+│       └── readme.md
+│   └── screenshots/
+│       ├── loss_curve.png         # Grafic de antrenare
+│       ├── confusion_matrix.png   # Matricea de confuzie initiala
+│       └── confusion_matrix_optimized.png # Rezultatul modelului optimizat
+│
+├── models/                        # Modelele salvate
+│   └── optimized_model.h5         # Modelul final optimizat
+│   └── trained_model.h5           # Model intermediar
+│   └── visinspai_model.h5         # Primul model
+│
+├── reports/                       # Rapoarte si analize vizuale
+│   └── figures/
+│       ├── accuracy_plot.png      # Evolutia acuratetei (atinge ~96%)
+│       ├── loss_plot.png          # Scaderea erorii pe parcursul celor 15 epoci
+│       └── experiments_comparison.png # Comparatia intre variantele de arhitectura
+│
+├── results/                       # Date brute din experimente
+│   ├── training_history.csv       # Valorile acuratetei si pierderii salvate
+│   └── optimization_experiments.csv # Rezultatele testelor pentru Baseline vs. Dropout
+│
+└── src/                           # Cod sursa
+    ├── app/
+    │   └── app.py                 # Streamlit app
+    ├── data_acquisition/
+    │   └── generator.py           # Date generate de mine
+    ├── neural_network/            # Implementare retea
+    │   ├── evaluate.py            # Testare (Confusion Matrix)
+    │   ├── model.py               # Definire arhitectura CNN
+    │   └── train.py               # Antrenare, salvare si plotare
+    └── preprocessing/             # Scripturi pentru prelucrare
+        ├── @datasplit.py          # Impartire in test/train/validation 70/15/15
+        ├── @generateplots.py      # Generare grafice
+        ├── @okimage.py            # Generare iagine suprafata ok
+        └── @resize.py             # Redimensionare dataset si greyscale
 ```
 
 ---
@@ -38,7 +76,7 @@ project-name/
 
 ### 2.2 Caracteristicile dataset-ului
 
-* **Număr total de observații:** 1500
+* **Număr total de observații:** 1400
 * **Tipuri de date:** ☐ Imagini
 * **Format fișiere:** ☐ JPG / ☐ XML
 
@@ -57,21 +95,20 @@ project-name/
 
 ### 3.1 Statistici descriptive aplicate
 
-Dimensiuni variate inițial (480–1920 px)
-Contrast neuniform → rezolvat la preprocesare
+Dimensiuni variate initial
+Contrast neuniform - rezolvat la preprocesare
 Diferențe mari de iluminare
 
 ### 3.2 Analiza calității datelor
 
 	Nicio imagine coruptă
-	~2% imagini neclare / subexpuse → eliminate
 	Necesitate transformare în grayscale + reducere noise
 
 ### 3.3 Probleme identificate
 
-	⚠ iluminare neuniformă → contrast adjustment
-	⚠ unele imagini prea mari → resize 150×150
-	⚠ variații vizibile de orientare fisuri → augmentare cu rotații
+	 iluminare neuniformă - contrast adjustment
+	 unele imagini prea mari - resize 150×150
+	 variații vizibile de orientare fisuri - augmentare cu rotații
 ---
 
 ##  4. Preprocesarea Datelor
@@ -99,7 +136,6 @@ Noise reduction
 
 	imagini procesate în data/processed/
 	structurate pe clase în train/val/test/
-	parametrii de preprocesare salvați în config/preprocess.yaml
 
 ---
 
