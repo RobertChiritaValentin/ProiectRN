@@ -452,7 +452,7 @@ Daca as reincepe, as colecta mai multe date in conditii de iluminare slaba inca 
 ## 12. Checklist Final
 
 - [x] Accuracy >= 70%
-- [x] 40% date originale
+- [ ] 40% date originale
 - [x] Model antrenat de la zero
 - [x] Aplicatie functionala
 - [x] Documentatie completa

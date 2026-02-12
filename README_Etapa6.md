@@ -643,7 +643,7 @@ python src/neural_network/visualize.py --all
 
 Asigurati-va ca urmatoarele fisiere exista si sunt completate:
 
-1. **`etapa6_optimizare_concluzii.md`** (acest fisier) cu:
+1. **`README_Etapa6.md`** (acest fisier) cu:
    - Tabel experimente optimizare (minimum 4)
    - Tabel modificari aplicatie software
    - Analiza confusion matrix

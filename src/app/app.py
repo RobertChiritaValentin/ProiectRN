@@ -3,7 +3,7 @@ import numpy as np
 from PIL import Image
 import os
 import time
-import random
+import tensorflow as tf
 
 # configuram pagina aplicatiei cu titlu si layout
 st.set_page_config(page_title="VisInspAI - Optimized", page_icon="🚀", layout="centered")
@@ -11,11 +11,12 @@ st.set_page_config(page_title="VisInspAI - Optimized", page_icon="🚀", layout=
 st.title("🏭 VisInspAI - Versiune Optimizată (Etapa 6)")
 st.markdown("### Sistem Avansat de Control Calitate")
 
-# definim numele claselor de defecte posibile
+# definim numele claselor de defecte posibile in ordinea antrenarii
 CLASS_NAMES = ['Crazing', 'Inclusion', 'Patches', 'Pitted', 'Rolled', 'Scratches']
 
-# functia care verifica daca modelul exista
-def load_optimized_model():
+# functia care incarca modelul real antrenat
+@st.cache_resource
+def load_model():
     # construim calea catre fisierul modelului
     base_dir = os.path.dirname(os.path.abspath(__file__))
     model_path = os.path.join(base_dir, '../../models/optimized_model.h5')
@@ -23,99 +24,96 @@ def load_optimized_model():
     # verificam daca fisierul exista fizic pe disc
     if not os.path.exists(model_path):
         return None
-    # returnam un marker ca modelul e gasit
-    return "MODEL_LOADED_SAFE_MODE"
+    
+    # incarcam modelul keras complet
+    try:
+        model = tf.keras.models.load_model(model_path)
+        return model
+    except Exception as e:
+        st.error(f"Eroare la incarcarea modelului: {e}")
+        return None
 
 # incercam sa incarcam modelul
-model = load_optimized_model()
+model = load_model()
 
 # verificam starea modelului si afisam mesaj corespunzator
 if model is None:
-    st.error("⚠️ Modelul 'models/optimized_model.h5' lipsește! Descarcă-l din Colab.")
+    st.error("⚠️ Modelul 'models/optimized_model.h5' lipsește sau este corupt!")
 else:
-    st.success("✅ Model Optimizat Încărcat (Accuracy Target > 80%)")
+    st.success("✅ Model Optimizat Încărcat și Pregătit pentru Inferență Reală")
 
 # componenta pentru incarcarea imaginii de catre utilizator
-uploaded_file = st.file_uploader("Încarcă imaginea piesei:", type=["jpg", "png", "jpeg"])
+uploaded_file = st.file_uploader("Încarcă imaginea piesei:", type=["jpg", "png", "jpeg", "bmp"])
 
 # daca avem o imagine incarcata si modelul e prezent
 if uploaded_file is not None and model is not None:
     # deschidem si afisam imaginea pentru confirmare
-    image = Image.open(uploaded_file)
-    st.image(image, caption='Input', width=300)
+    image = Image.open(uploaded_file).convert('RGB')
+    st.image(image, caption='Imaginea Încărcată', width=300)
     
     # butonul care declanseaza analiza
     if st.button("🔍 Analiză Detaliată"):
         # afisam un spinner cat timp se proceseaza
-        with st.spinner('Procesare cu model optimizat...'):
-            # asteptam putin pentru efect vizual
-            time.sleep(0.5)
+        with st.spinner('Procesare imagine cu modelul neuronal...'):
             
             # masuram timpul de start pentru a calcula latenta
             start_time = time.time()
             
-            # extragem numele fisierului pentru logica de simulare
-            fname = uploaded_file.name.lower()
-            idx = 0
-            is_clean = False # marcam daca piesa pare buna
+            # --- preprocesare imagine pentru model ---
+            # redimensionam la 150x150 exact cum a fost antrenat modelul
+            img_resized = image.resize((150, 150))
             
-            # determinam tipul de defect pe baza numelui fisierului
-            if "scratch" in fname: idx = 5
-            elif "patch" in fname: idx = 2
-            elif "crazing" in fname: idx = 0
-            elif "inclusion" in fname: idx = 1
-            elif "pitted" in fname: idx = 3
-            elif "rolled" in fname: idx = 4
-            elif "ok" in fname or "clean" in fname: 
-                # daca piesa e ok alegem un defect random dar cu scor mic
-                idx = random.randint(0, 5)
-                is_clean = True
-            else: 
-                # daca nu recunoastem numele alegem random
-                idx = random.randint(0, 5)
+            # convertim in array numpy
+            img_array = np.array(img_resized)
             
-            # initializam lista de predictii cu valori mici
-            predictions = [random.uniform(0, 0.05) for _ in range(6)]
+            # normalizam valorile pixelilor la intervalul 0-1
+            img_array = img_array / 255.0
             
-            if is_clean:
-                # pentru piese bune scorul maxim e mic sub 35 la suta
-                predictions[idx] = random.uniform(0.15, 0.35)
-            else:
-                # pentru defecte scorul e mare peste 85 la suta
-                predictions[idx] = random.uniform(0.85, 0.99)
+            # adaugam dimensiunea batch-ului (devine 1, 150, 150, 3)
+            img_batch = np.expand_dims(img_array, axis=0)
             
-            # simulam latenta specifica unui model rapid
-            time.sleep(random.uniform(0.03, 0.05))
+            # --- inferenta reala ---
+            # modelul returneaza un array de probabilitati pentru cele 6 clase
+            predictions = model.predict(img_batch)
             
             # calculam cat a durat inferenta
             end_time = time.time()
             latency = (end_time - start_time) * 1000
             
-            # extragem rezultatele finale
-            confidence = float(predictions[idx])
+            # extragem probabilitatile sub forma de lista simpla
+            probs = predictions[0]
+            
+            # gasim indexul clasei cu cea mai mare probabilitate
+            idx = np.argmax(probs)
+            confidence = float(probs[idx])
             defect_name = CLASS_NAMES[idx]
             
             st.divider()
             
             # afisam metricile principale pe coloane
             col1, col2 = st.columns(2)
-            col1.metric("Defect Predus", defect_name)
+            col1.metric("Defect Identificat", defect_name)
             col2.metric("Latență Inferență", f"{latency:.1f} ms")
             
             # afisam bara de progres pentru incredere
-            st.write("### Nivel de Încredere (Confidence)")
-            st.progress(int(confidence * 100), text=f"{confidence:.2%}")
+            st.write(f"### Nivel de Încredere: {confidence:.2%}")
+            st.progress(int(confidence * 100))
             
-            # afisam decizia finala in functie de pragurile de incredere
+            # logica de decizie industriala
             if confidence > 0.75:
-                st.error(f"ACȚIUNE: Piesa respinsă - Defect {defect_name} clar.")
-            elif confidence > 0.4:
-                st.warning(f"ACȚIUNE: Necesită inspecție manuală (Incert).")
+                st.error(f"🔴 ACȚIUNE: Piesa RESPINSĂ - Defect {defect_name} detectat cu certitudine mare.")
+            elif confidence > 0.45:
+                st.warning(f"🟠 ACȚIUNE: Necesită inspecție manuală (Incertitudine la {defect_name}).")
             else:
-                # aici intra piesele considerate conforme
-                st.success(f"ACȚIUNE: Piesa Conformă (Scor mic pentru {defect_name}).")
+                # daca nicio clasa nu are scor mare, modelul este confuz
+                st.info(f"⚪ ACȚIUNE: Rezultat neconcludent. Repetați preluarea imaginii.")
 
-            # sectiune expandabila pentru detalii tehnice
-            with st.expander("Vezi probabilitățile brute (Debug)"):
-                for i, name in enumerate(CLASS_NAMES):
-                    st.write(f"{name}: {predictions[i]:.4f}")
+            # sectiune expandabila pentru a vedea toate scorurile
+            with st.expander("Vezi probabilitățile detaliate (Debug)"):
+                # cream un dictionar pentru sortare
+                results = {CLASS_NAMES[i]: float(probs[i]) for i in range(len(CLASS_NAMES))}
+                # sortam descrescator dupa probabilitate
+                sorted_results = dict(sorted(results.items(), key=lambda item: item[1], reverse=True))
+                
+                for name, score in sorted_results.items():
+                    st.write(f"**{name}**: {score:.4f}")
