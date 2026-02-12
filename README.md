@@ -441,11 +441,12 @@ Daca as reincepe, as colecta mai multe date in conditii de iluminare slaba inca 
 
 ## 11. Bibliografie
 
-1.  **Abaza, B.**, 2025. Curs Rețele Neuronale. POLITEHNICA București.
-2.  **Kaustubh, D.**, 2019. *NEU Surface Defect Database* [Dataset]. Kaggle. URL: https://www.kaggle.com/datasets/kaustubhdikshit/neu-surface-defect-database *(Sursa efectivă a datelor utilizate)*
-3.  **TensorFlow Developers**, 2024. TensorFlow Core Documentation. URL: https://www.tensorflow.org/api_docs
-4.  **Van Rossum, G., Drake, F.L.**, 2009. Python 3 Reference Manual. CreateSpace. URL: https://docs.python.org/3/reference/
-5.  **Kingma, D.P., Ba, J.**, 2015. Adam: A Method for Stochastic Optimization. *International Conference on Learning Representations (ICLR)*. URL: https://arxiv.org/abs/1412.6980
+1. **Abaza, B.**, 2025. *Curs Rețele Neuronale*. Universitatea Națională de Știință și Tehnologie POLITEHNICA București.
+2. **Dikshit, K.**, 2019. *NEU Surface Defect Database*. Kaggle. [https://www.kaggle.com/datasets/kaustubhdikshit/neu-surface-defect-database]
+3. **TensorFlow Developers**, 2024. *TensorFlow Core Documentation*. [https://www.tensorflow.org/api_docs]
+4. **Van Rossum, G., Drake, F.L.**, 2009. *Python 3 Reference Manual*. CreateSpace. [https://docs.python.org/3/reference/]
+5. **Kingma, D.P., Ba, J.**, 2015. *Adam: A Method for Stochastic Optimization*. International Conference on Learning Representations. [https://arxiv.org/abs/1412.6980]
+6. **Google DeepMind**, 2026. *Gemini Flash 2.0*. Utilizat pentru: Asistență în structurarea documentației și ajutor cod.
 
 ---
 
