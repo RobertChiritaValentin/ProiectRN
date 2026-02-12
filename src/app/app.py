@@ -106,7 +106,8 @@ if uploaded_file is not None and model is not None:
                 st.warning(f"🟠 ACȚIUNE: Necesită inspecție manuală (Incertitudine la {defect_name}).")
             else:
                 # daca nicio clasa nu are scor mare, modelul este confuz
-                st.info(f"⚪ ACȚIUNE: Rezultat neconcludent. Repetați preluarea imaginii.")
+                # in context industrial, daca nu seamana cu niciun defect, e probabil buna
+                st.success(f"✅ ACȚIUNE: Piesă CONFORMĂ (Nu s-au detectat defecte evidente).")
 
             # sectiune expandabila pentru a vedea toate scorurile
             with st.expander("Vezi probabilitățile detaliate (Debug)"):
