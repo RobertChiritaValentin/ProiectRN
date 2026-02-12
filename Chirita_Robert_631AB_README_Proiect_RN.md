@@ -441,18 +441,18 @@ Daca as reincepe, as colecta mai multe date in conditii de iluminare slaba inca 
 
 ## 11. Bibliografie
 
-1.  **Abaza, B.**, 2025. AI-Driven Dynamic Covariance for ROS 2 Mobile Robot Localization. *Sensors*, 25, 3026. URL: https://doi.org/10.3390/s25103026
+1.  **Abaza, B.**, 2025. Curs Rețele Neuronale. POLITEHNICA București.
 2.  **Kaustubh, D.**, 2019. *NEU Surface Defect Database* [Dataset]. Kaggle. URL: https://www.kaggle.com/datasets/kaustubhdikshit/neu-surface-defect-database *(Sursa efectivă a datelor utilizate)*
 3.  **TensorFlow Developers**, 2024. TensorFlow Core Documentation. URL: https://www.tensorflow.org/api_docs
 4.  **Van Rossum, G., Drake, F.L.**, 2009. Python 3 Reference Manual. CreateSpace. URL: https://docs.python.org/3/reference/
-5. 
+5.  **Kingma, D.P., Ba, J.**, 2015. Adam: A Method for Stochastic Optimization. *International Conference on Learning Representations (ICLR)*. URL: https://arxiv.org/abs/1412.6980
 
 ---
 
 ## 12. Checklist Final
 
 - [x] Accuracy >= 70%
-- [x] 40% date originale
+- [ ] 40% date originale
 - [x] Model antrenat de la zero
 - [x] Aplicatie functionala
 - [x] Documentatie completa
