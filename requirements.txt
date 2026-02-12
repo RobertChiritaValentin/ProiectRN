@@ -6,6 +6,9 @@ pandas
 matplotlib
 numpy
 pillow
+seaborn
+opencv-python
 
 # Machine Learning
 tensorflow
+scikit-learn
